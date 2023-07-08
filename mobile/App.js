@@ -16,6 +16,15 @@ export default function App() {
   const [showResults, setShowResults] = useState(false)
   const [apiResponse, setApiResponse] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  
+  const [isGlutenFreeSelected, setIsGlutenFreeSelected] = useState(false)
+  const [isVeganSelected, setIsVeganSelected] = useState(false)
+  const [isVegetarianSelected, setIsVegetarianSelected] = useState(false)
+  const [isKetoSelected, setIsKetoSelected] = useState(false)
+  const [isLowCarbSelected, setIsLowCarbSelected] = useState(false)
+  const [isLowFatSelected, setIsLowFatSelected] = useState(false)
+
+
   const API_URL = 'http://10.0.10.70:8000/api/v1'
 
   if (!permission) {
@@ -76,7 +85,8 @@ export default function App() {
   return (
     <View style={styles.container}>
       {previewVisible && capturedImage ?
-        (!showResults ? <CameraPreview photo={capturedImage} retakePicture={__retakePicture} savePhoto={__savePhoto} /> : <ShowResults isLoading={isLoading} result={apiResponse} />)
+        (!showResults ? <CameraPreview photo={capturedImage} retakePicture={__retakePicture} savePhoto={__savePhoto} /> : 
+        <ShowResults isLoading={isLoading} result={apiResponse} setIsLoading={setIsLoading} setPreviewVisible={setPreviewVisible} setApiResponse={setApiResponse} setShowResults={setShowResults} setCapturedImage={setCapturedImage} />)
         : (<Camera
           style={styles.camera}
           type={type}
@@ -84,14 +94,15 @@ export default function App() {
             camera = r
           }}>
           <View style={styles.choices}>
-            <ScrollView horizontal={true}>
-              <RecipeChoice type="Vegan" icon="leaf" />
-              <RecipeChoice type="Vegetarian" icon="carrot" />
-              <RecipeChoice type="Gluten Free" icon="wheat" />
-              <RecipeChoice type="Keto" icon="food-drumstick" />
-              <RecipeChoice type="Paleo" icon="food-apple" />
-              <RecipeChoice type="Low Carb" icon="food-apple" />
-              <RecipeChoice type="Low Fat" icon="food-apple" />
+            <ScrollView   showsHorizontalScrollIndicator={false} horizontal={true}>              
+              <RecipeChoice selected={isVeganSelected} setSelected={setIsVeganSelected} type="Vegan" icon="leaf" />
+              <RecipeChoice selected={isVegetarianSelected} setSelected={setIsVegetarianSelected} type="Vejeteryan" icon="carrot" />
+              <RecipeChoice selected={isGlutenFreeSelected} setSelected={setIsGlutenFreeSelected} type="Glutensiz" icon="bread-slice" />
+              <RecipeChoice selected={isKetoSelected} setSelected={setIsKetoSelected} type="Keto" icon="oil" />
+              <RecipeChoice selected={isLowCarbSelected} setSelected={setIsLowCarbSelected} type="Low Carb" icon="food-apple" />
+              <RecipeChoice selected={isLowFatSelected} setSelected={setIsLowFatSelected} type="Low Fat" icon="food-steak" />
+
+
             </ScrollView>
           </View>
 
@@ -109,7 +120,7 @@ export default function App() {
   );
 }
 
-const ShowResults = ({ isLoading, result }) => {
+const ShowResults = ({ isLoading, setCapturedImage, setIsLoading, setPreviewVisible, setApiResponse, setShowResults, result }) => {
   console.log(result)
   console.log('asda')
   const [loaded] = useFonts({Norms: require('./assets/fonts/TTNorms-Regular.otf'),
@@ -121,13 +132,21 @@ const ShowResults = ({ isLoading, result }) => {
   const API_URL = 'http://10.0.10.70:8000/api/v1'
   console.log((API_URL+'/recipe/image/'+result.image))
 
+  const goBack = () => {
+    setIsLoading(false)
+    setPreviewVisible(false)
+    setCapturedImage(null)
+    setApiResponse({})
+    setShowResults(false)
+  }
+
   return (
     <View>
 
       {isLoading ? 
         <View style={{ alignItems: 'center' }}>
           <Image source={require('./assets/animation_500_ljuhcncl.gif')} style={{width:300, height:300}} />
-          <Text style={styles.resultTitle2}>Yemek tarifi bulunuyor</Text>
+          <Text style={styles.resultTitle2}>Sana Özel Tarif Hazirlaniyor</Text>
         </View>:
 
         <View style={styles.resultContainer}>
@@ -138,25 +157,36 @@ const ShowResults = ({ isLoading, result }) => {
               uri: (API_URL+'/recipe/image/'+result.image),
             }}
           />
-          <ScrollView horizontal={false}>
-          <Text style={styles.resultTitle2}>Malzemeler</Text>
+          <ScrollView style={{height:200}} horizontal={false}>
+            <Text style={styles.resultTitle2}>Malzemeler</Text>
 
-          <View style={{ marginTop: 0 }}>
-            {result.recipe.ingredients.map((item, index) => (
-              <Text style={styles.ingredients}>{item}</Text>
-            ))}
+            <View style={{ marginTop: 0 }}>
+              {result.recipe.ingredients.map((item, index) => (
+                <Text style={styles.ingredients}>{item}</Text>
+              ))}
 
-          </View>
-          <View style={{ marginTop: 20 }}>
-            <Text style={styles.resultTitle2}>Tarif</Text>
-            <Text style={styles.instructions}>{result.recipe.instructions}</Text>
-            
-          </View>
-          <Text style={styles.resultTitle2}>Afiyet Olsun</Text>
+            </View>
+            <View style={{ marginTop: 20 }}>
+              <Text style={styles.resultTitle2}>Tarif</Text>
+              <Text style={styles.instructions}>{result.recipe.instructions}</Text>
+            </View>
 
           </ScrollView>
 
+          <View style={{ marginTop: 0, flex:1, flexDirection:'row', alignItems:"center", justifyContent:"center"}}>
+            <TouchableOpacity onPress={()=>goBack()}>
+              <Icon name="camera-retake" size={35} color="#D47D3B" />
+
+            </TouchableOpacity>
+            <Text style={styles.resultTitle4}>Afiyet Olsun</Text>
+            <TouchableOpacity onPress={()=> alert("Kaydedildi !")}>
+              {/* <Text style={styles.resultTitle2}>kaydet</Text> */}
+              <Icon name="download" size={35} color="#D47D3B" />
+            </TouchableOpacity>
+          </View>
+          
         </View>
+        
       }
     </View>
   )
@@ -201,9 +231,9 @@ const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 80,
-                height: 80,
-                backgroundColor: 'transparent',
+                width: 70,
+                height: 70,
+                backgroundColor: '#d47d3b75',
                 borderRadius: 12,
                 borderColor: '#fff',
                 borderWidth: 2,
@@ -219,9 +249,9 @@ const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                width: 80,
-                height: 80,
-                backgroundColor: 'transparent',
+                width: 70,
+                height: 70,
+                backgroundColor: '#d47d3b75',
                 borderRadius: 12,
                 borderColor: '#fff',
                 borderWidth: 2,
@@ -244,23 +274,27 @@ const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
 }
 
 
-const RecipeChoice = ({ type, icon }) => {
+const RecipeChoice = ({ type, icon, selected, setSelected }) => {
   return (
-    <View style={{
-      flexDirection: 'column',
+    <View style={{alignItems:'center', justifyContent:"flex-end"}}>
+      <TouchableOpacity onPress={()=>setSelected(!selected)} style={{
+      flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      width: 80,
-      height: 80,
-      backgroundColor: 'transparent',
+      width: 100,
+      height: 40,
+      backgroundColor: selected? '#D47D3B44':'transparent',
       borderRadius: 12,
-      borderColor: '#fff',
+      borderColor: selected? '#D47D3B':'#fff',
       borderWidth: 2,
-      margin: 5
+      marginRight: 10,
+      marginTop: 10,
+      marginBottom: 10
     }}>
-      <Icon name={icon} size={20} color="#fff" />
-      <Text style={{ color: '#fff', marginLeft: 10 }}>{type}</Text>
-    </View>
+      <Icon name={icon} size={20} color={selected? '#fff':'#fff'} />
+      <Text style={{ color: selected? '#fff':'#fff', marginTop:3, marginLeft:3 }}>{type}</Text>  
+      </TouchableOpacity>
+      </View>
   )
 }
 
@@ -287,8 +321,8 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     marginBottom: 20,
     borderColor: '#ececec',
-    borderWidth: 5,
-    backgroundColor: '#dedede'
+    borderWidth: 4,
+    backgroundColor: 'transparent',
   },
   camera: {
     flex: 1,
@@ -340,7 +374,7 @@ const styles = StyleSheet.create({
     // lineHeight: 48,
     fontFamily: 'Sister',
     textAlign: 'center',
-    marginTop: 0,
+    marginTop: 0
   },
   resultTitle3: {
     color: '#D47D3B',
@@ -348,6 +382,17 @@ const styles = StyleSheet.create({
     fontFamily: 'Sister',
     textAlign: 'right',
     marginRight: 40,
+  },
+  resultTitle4: {
+    color: '#D47D3B',
+    fontSize: 35,
+    // lineHeight: 48,
+    fontFamily: 'Sister',
+    textAlign: 'center',
+    marginTop: 0,
+    marginLeft: 40,
+    marginRight: 40,
+    marginBottom: 20,
   },
   resultContainer: {
     flex: 1,
