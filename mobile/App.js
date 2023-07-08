@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ImageBackground, Image } from 'react-native';
 import { Chip, IconButton } from "@react-native-material/core";
+import { useFonts } from 'expo-font';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 export default function App() {
@@ -14,7 +15,7 @@ export default function App() {
   const [showResults, setShowResults] = useState(false)
   const [apiResponse, setApiResponse] = useState({})
   const [isLoading, setIsLoading] = useState(false)
-  const API_URL = 'http://10.0.10.85:8000/api/v1'
+  const API_URL = 'http://10.0.10.70:8000/api/v1'
 
   if (!permission) {
     return (
@@ -56,8 +57,9 @@ export default function App() {
     if (response.ok) {
       let recipeResult = await response.json()
       console.log(recipeResult)
-      setIsLoading(false)
       setApiResponse(recipeResult)
+      setIsLoading(false)
+
     } else {
       console.error(response)
     }
@@ -107,14 +109,30 @@ export default function App() {
 }
 
 const ShowResults = ({ isLoading, result }) => {
+  console.log(result)
+  console.log('asda')
+  const [loaded] = useFonts({Norms: require('./assets/fonts/TTNorms-Regular.otf'),
+  Sister: require('./assets/fonts/Sisterhood.ttf'), });
+
+  if (!loaded) {
+  return null;
+  }
+  const API_URL = 'http://10.0.10.70:8000/api/v1'
+  console.log((API_URL+'/recipe/image/'+result.image))
+
   return (
     <View>
 
       {isLoading ? <Text>Senin icin muhtesem bir yemek hazirliyorum</Text> :
         <View style={styles.resultContainer}>
-          <Text style={styles.title}>{result.recipe.name}</Text>
-          <Image style={styles.food_image} source={require('./assets/11.jpeg')} />
-          <Text style={styles.title2}>Malzemeler</Text>
+          <Text style={styles.resultTitle}>{result.recipe.name.toUpperCase()}</Text>
+          <Image
+            style={styles.food_image}
+            source={{
+              uri: (API_URL+'/recipe/image/'+result.image),
+            }}
+          />
+          <Text style={styles.resultTitle2}>Malzemeler</Text>
 
           <View style={{ marginTop: 0 }}>
             {result.recipe.ingredients.map((item, index) => (
@@ -238,7 +256,7 @@ const RecipeChoice = ({ type, icon }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F7F5EC',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -285,14 +303,53 @@ const styles = StyleSheet.create({
   },
   resultContainer: {
     flex: 1,
-    flexDirection: 'column',
+    // flexDirection: 'row',
     backgroundColor: '#F7F5EC',
+    width: '100vw',
   },
   food_image: {
     width: 250,
     height: 250,
     alignSelf: 'center',
     marginTop: 20,
+  },
+  resultTitle: {
+    color: '#D47D3B',
+    fontSize: 25,
+    lineHeight: 48,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 60,
+    paddingRight: 15,
+    paddingLeft: 15,
+  },
+  resultTitle2: {
+    color: '#D47D3B',
+    fontSize: 40,
+    // lineHeight: 48,
+    fontFamily: 'Sister',
+    textAlign: 'center',
+    marginTop: 0,
+  },
+  resultContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#F7F5EC',
+    width: '100%',
+  },
+  food_image: {
+    width: 250,
+    height: 250,
+    alignSelf: 'center',
+    marginTop: 20,
+  },
+  ingredients:  {
+    color: '#56585B',
+    fontSize: 14,
+    lineHeight: 21,
+    textAlign: 'center',
+    fontFamily: 'Norms',
+
   },
 
 });
