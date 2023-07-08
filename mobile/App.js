@@ -132,6 +132,7 @@ const ShowResults = ({ isLoading, result }) => {
               uri: (API_URL+'/recipe/image/'+result.image),
             }}
           />
+          <ScrollView horizontal={false}>
           <Text style={styles.resultTitle2}>Malzemeler</Text>
 
           <View style={{ marginTop: 0 }}>
@@ -140,6 +141,13 @@ const ShowResults = ({ isLoading, result }) => {
             ))}
 
           </View>
+          <View style={{ marginTop: 20 }}>
+            <Text style={styles.resultTitle2}>Tarif</Text>
+            <Text style={styles.instructions}>{result.recipe.instructions}</Text>
+          </View>
+          <Text style={styles.resultTitle2}>Afiyet Olsun</Text>
+
+          </ScrollView>
 
         </View>
       }
@@ -324,6 +332,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 0,
   },
+  resultTitle3: {
+    color: '#D47D3B',
+    fontSize: 30,
+    fontFamily: 'Sister',
+    textAlign: 'right',
+    marginRight: 40,
+  },
   resultContainer: {
     flex: 1,
     flexDirection: 'column',
@@ -343,6 +358,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Norms',
 
+  },
+  instructions:  {
+    color: '#56585B',
+    fontSize: 14,
+    lineHeight: 21,
+    textAlign: 'left',
+    fontFamily: 'Norms',
+    marginLeft: 25,
+    marginRight: 25,
+    marginBottom: 15
   },
 
 });
