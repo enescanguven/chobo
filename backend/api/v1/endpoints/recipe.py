@@ -24,3 +24,7 @@ async def create_recipe_from_fridge_image(file: UploadFile = File(...)):
 @router.post("/fromPromptText")
 def create_recipe_from_prompt_text():
     pass
+
+@router.get("/image/{image_path}")
+def get_image(image_path):
+    return FileResponse(f"covers/{image_path}")

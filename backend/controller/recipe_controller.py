@@ -24,11 +24,12 @@ class RecipeController():
                        "content":
                        """Bir aşçı gibi davran. Sana verdiğim malzeme listesinden bana bir yemek tarifi oluştur. Verdiğim listeye sadık kalmaya çalış. Malzemelerin hepsini kullanmak zorunda değilsin. Her evde bulunabilecek malzemeleri de var kabul edebilirsin.Bir aşçı gibi davran. Sana verdiğim malzeme listesinden bana bir yemek tarifi oluştur. Verdiğim listeye sadık kalmaya çalış. Malzemelerin hepsini kullanmak zorunda değilsin. Her evde bulunabilecek malzemeleri de var kabul edebilirsin. Yemeğin adı, içeriği ve yapılışını aşşağıdaki JSON formatinda ver bunun dışında bir şey yazma"""},
                       {"role": "user", "content": prompt}, ])
+        print(response["choices"][0]["message"]["content"])
         response_text = json.loads(response["choices"][0]["message"]["content"])
         dh = DallEHelper(os.getenv("OPENAI_API_KEY"))
         image_path = dh.create_image(response_text["name"])
-        print(response_text, image_path)
-        return {"recipe": response_text, "image": image_path, "detected_objects": ingredients["ingredients"]}
+        print({"recipe": response_text, "image": image_path.split('/')[1], "detected_objects": ingredients["ingredients"]})
+        return {"recipe": response_text, "image": image_path.split('/')[1], "detected_objects": ingredients["ingredients"]}
 
 
 recipe_controller = RecipeController()
