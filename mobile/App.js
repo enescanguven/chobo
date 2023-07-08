@@ -5,6 +5,7 @@ import { ImageBackground, Image } from 'react-native';
 import { Chip, IconButton } from "@react-native-material/core";
 import { useFonts } from 'expo-font';
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import Lottie from 'lottie-react-native';
 
 export default function App() {
   let camera;
@@ -123,7 +124,12 @@ const ShowResults = ({ isLoading, result }) => {
   return (
     <View>
 
-      {isLoading ? <Text>Senin icin muhtesem bir yemek hazirliyorum</Text> :
+      {isLoading ? 
+        <View style={{ alignItems: 'center' }}>
+          <Image source={require('./assets/animation_500_ljuhcncl.gif')} style={{width:300, height:300}} />
+          <Text style={styles.resultTitle2}>Yemek tarifi bulunuyor</Text>
+        </View>:
+
         <View style={styles.resultContainer}>
           <Text style={styles.resultTitle}>{result.recipe.name.toUpperCase()}</Text>
           <Image
@@ -144,6 +150,7 @@ const ShowResults = ({ isLoading, result }) => {
           <View style={{ marginTop: 20 }}>
             <Text style={styles.resultTitle2}>Tarif</Text>
             <Text style={styles.instructions}>{result.recipe.instructions}</Text>
+            
           </View>
           <Text style={styles.resultTitle2}>Afiyet Olsun</Text>
 
@@ -172,6 +179,7 @@ const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
           flex: 1
         }}
       >
+
         <View
           style={{
             flex: 1,
@@ -225,7 +233,9 @@ const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
 
 
             </TouchableOpacity>
+            
           </View>
+          
         </View>
 
       </ImageBackground>
