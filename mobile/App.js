@@ -180,49 +180,42 @@ const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
           >
             <TouchableOpacity
               onPress={retakePicture}
+
               style={{
-                width: 90,
-                height: 90,
-                marginBottom: 50,
-                marginLeft: 15,
-                backgroundColor: 'silver',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                borderRadius: 150
+                width: 80,
+                height: 80,
+                backgroundColor: 'transparent',
+                borderRadius: 12,
+                borderColor: '#fff',
+                borderWidth: 2,
+                marginLeft: 20,
+                marginBottom: 50
               }}
             >
-              <Text
-                style={{
-                  color: '#fff',
-                  fontWeight: 'bold',
-                  fontSize: 20
-                }}
-              >
-                R
-              </Text>
+              <Icon name="camera-retake-outline" size={35} color="#fff" />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={savePhoto}
               style={{
-                width: 90,
-                height: 90,
-                marginBottom: 50,
-                marginRight: 15,
-                backgroundColor: 'silver',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                borderRadius: 150
+                width: 80,
+                height: 80,
+                backgroundColor: 'transparent',
+                borderRadius: 12,
+                borderColor: '#fff',
+                borderWidth: 2,
+                marginRight: 20,
+                marginBottom: 50
               }}
             >
-              <Text
-                style={{
-                  color: '#fff',
-                  fontWeight: 'bold',
-                  fontSize: 20
-                }}
-              >
-                G
-              </Text>
+              <Icon name="send" size={35} color="#fff" />
+
+
             </TouchableOpacity>
           </View>
         </View>
