@@ -10,7 +10,7 @@ class ObjectDetectionController():
             'butter': 'tereyağı', 'carrot': 'havuç', 'cheese': 'peynir', 'chicken': 'tavuk',
             'chicken_breast': 'tavuk göğsü', 'chocolate': 'çikolata', 'corn': 'Mısır', 'eggs': 'yumurtalar',
             'flour': 'un', 'goat_cheese': 'Keçi peyniri', 'green_beans': 'taze fasulye', 'ground_beef': 'dana kıyma',
-            'ham': 'jambon', 'heavy_cream': 'yoğun krema', 'lime': 'kireç', 'milk': 'süt', 'mushrooms': 'mantarlar',
+            'ham': 'jambon', 'heavy_cream': 'yoğun krema', 'lime': 'limon', 'milk': 'süt', 'mushrooms': 'mantarlar',
             'onion': 'soğan', 'potato': 'patates', 'shrimp': 'karides', 'spinach': 'ıspanak',
             'strawberries': 'çilekler', 'sugar': 'şeker', 'sweet_potato': 'tatlı patates', 'tomato': 'domates'}
 
