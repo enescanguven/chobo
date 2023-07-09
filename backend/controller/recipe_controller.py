@@ -11,10 +11,20 @@ class RecipeController():
     def __init__(self) -> None:
         pass
 
-    def create_recipe_from_image(self, image_path):
-        print(image_path)
+    def create_recipe_from_image(self, image_path, choices):
+        print(image_path, choices)
+        choice_dict = {
+            "isVeganSelected": "vegan",
+            "isVegetarianSelected": "vejetaryen",
+            "isGlutenFreeSelected": "glutensiz",
+            "isKetoSelected": "keto diyete uygun",
+            "isLowCarbSelected": "düşük karbonhidratlı",
+            "isLowFatSelected": "düşük yağlı",
+
+        }
         ingredients = object_detection_controller.get_fridge_contents(image_path)
-        prompt = "Sana verdiğim malzeme listesinden bana bir yemek tarifi öner:\n"
+        prompt = f"Sana verdiğim malzeme listesinden bana bir {choices['recipeType']} tarifi öner Bu tarif {', '.join([choice_dict[item] for item in choice_dict.keys() if choices[item]])} bir tarif olsun:\n"
+        print(prompt)
         for ingredient in ingredients["ingredients"]:
             prompt += f"- {ingredient}\n"
         prompt += """\nTarifi bu formatta olustur. : {"name": "yemek ismi", "ingredients": ["1 bardak sut", "1 çorba kaşığı un"], "instructions" : " ornek ornek"} \n"""

@@ -23,7 +23,7 @@ export default function App() {
   const [isKetoSelected, setIsKetoSelected] = useState(false)
   const [isLowCarbSelected, setIsLowCarbSelected] = useState(false)
   const [isLowFatSelected, setIsLowFatSelected] = useState(false)
-
+  const [recipeType, setRecipeType] = useState('')
 
   const API_URL = 'http://10.0.10.70:8000/api/v1'
 
@@ -57,6 +57,7 @@ export default function App() {
   const __savePhoto = async () => {
     var data = new FormData()
     data.append('file', { uri: capturedImage.uri, name: 'image.jpg', type: 'image/jpeg' })
+    data.append("choices", JSON.stringify({isGlutenFreeSelected, isVeganSelected, isVegetarianSelected, isKetoSelected, isLowCarbSelected, isLowFatSelected, recipeType}))
     setIsLoading(true)
     setShowResults(true)
 
@@ -101,10 +102,23 @@ export default function App() {
               <RecipeChoice selected={isKetoSelected} setSelected={setIsKetoSelected} type="Keto" icon="oil" />
               <RecipeChoice selected={isLowCarbSelected} setSelected={setIsLowCarbSelected} type="Low Carb" icon="food-apple" />
               <RecipeChoice selected={isLowFatSelected} setSelected={setIsLowFatSelected} type="Low Fat" icon="food-steak" />
-
-
             </ScrollView>
+            
           </View>
+          <View style={styles.choices2}>
+            <ScrollView   showsHorizontalScrollIndicator={false} horizontal={true}>   
+              <RecipeTypeChoice recipeType={recipeType} setRecipeType={setRecipeType} type="Kahvaltı" icon="bread-slice" />
+              <RecipeTypeChoice recipeType={recipeType} setRecipeType={setRecipeType} type="Öğle Yemeği" icon="carrot" />
+              <RecipeTypeChoice recipeType={recipeType} setRecipeType={setRecipeType} type="Akşam Yemeği" icon="bread-slice" />
+              <RecipeTypeChoice recipeType={recipeType} setRecipeType={setRecipeType} type="Tatlı" icon="bread-slice" />
+              <RecipeTypeChoice recipeType={recipeType} setRecipeType={setRecipeType} type="Çorba" icon="carrot" />
+              <RecipeTypeChoice recipeType={recipeType} setRecipeType={setRecipeType} type="Sandviç" icon="bread-slice" />
+              <RecipeTypeChoice recipeType={recipeType} setRecipeType={setRecipeType} type="Salata" icon="bread-slice" />
+              <RecipeTypeChoice recipeType={recipeType} setRecipeType={setRecipeType} type="Kokteyl" icon="carrot" />
+            </ScrollView>
+            
+          </View>
+          
 
           <View style={styles.cameraControls}>
             <View style={styles.buttonContainer}>
@@ -273,6 +287,33 @@ const CameraPreview = ({ photo, retakePicture, savePhoto }) => {
   )
 }
 
+const RecipeTypeChoice = ({ type, icon, recipeType, setRecipeType }) => {
+  let selected = (recipeType == type)
+  return (
+    <View style={{alignItems:'center', justifyContent:"flex-end"}}>
+      <TouchableOpacity onPress={()=>setRecipeType(type)} style={{
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: "auto",
+      height: 40,
+      backgroundColor: selected? '#D47D3B44':'transparent',
+      borderRadius: 12,
+      borderColor: selected? '#D47D3B':'#fff',
+      borderWidth: 2,
+      paddingRight: 5,
+      paddingLeft: 5,
+      marginRight: 10,
+      marginTop: 10,
+      marginBottom: 10
+    }}>
+      <Icon name={icon} size={20} color={selected? '#fff':'#fff'} />
+      <Text style={{ color: selected? '#fff':'#fff', marginTop:3, marginLeft:3 }}>{type}</Text>
+      </TouchableOpacity>
+      </View>
+  )
+}
+
 
 const RecipeChoice = ({ type, icon, selected, setSelected }) => {
   return (
@@ -281,12 +322,14 @@ const RecipeChoice = ({ type, icon, selected, setSelected }) => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
-      width: 100,
+      width: "auto",
       height: 40,
       backgroundColor: selected? '#D47D3B44':'transparent',
       borderRadius: 12,
       borderColor: selected? '#D47D3B':'#fff',
       borderWidth: 2,
+      paddingRight: 5,
+      paddingLeft: 5,
       marginRight: 10,
       marginTop: 10,
       marginBottom: 10
@@ -340,6 +383,16 @@ const styles = StyleSheet.create({
   choices: {
     position: 'absolute',
     bottom: 120,
+    flexDirection: 'row',
+    flex: 1,
+    width: '100%',
+    height: 100,
+    justifyContent: 'space-between',
+  },
+
+  choices2: {
+    position: 'absolute',
+    bottom: 175,
     flexDirection: 'row',
     flex: 1,
     width: '100%',
